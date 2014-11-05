@@ -73,7 +73,7 @@ bool Request::operator ==(const Request& orig) {
 }
 
 bool Request::operator  <(const Request& orig) {
-    if (this->_nRequest < orig._nRequest)
+    if (_nRequest < orig._nRequest)
         return true;
     return false;
 }

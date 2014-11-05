@@ -101,7 +101,7 @@ void CargarListaCaciones(std::list<Song> &lSongs) {
  * @description     Este método busca en la lista la canción pedida y devuelve un 
  *                  puntero que apunta al dato de la petición solicitada.
  */
-Request* BuscarDato(list< list<Request> > &lRequest, int codigo) {
+list<Request>::iterator BuscarDato(list< list<Request> > &lRequest, int codigo) {
     list< list<Request> >::iterator i;
     list<Request>::iterator j;
     Request *r;
@@ -109,70 +109,64 @@ Request* BuscarDato(list< list<Request> > &lRequest, int codigo) {
     for (i = lRequest.begin(); i != lRequest.end(); ++i){
         for (j = i->begin(); j != i->end(); ++j) {
             if (j->getCod() == codigo) {
-                return r = j.operator ->();
+                return j;
             }
         }
     }
-    return 0;
+    return lRequest.end()->end();
 }
 
 void AnadePeticion(std::list< list<Request> > &lRequest, int peticion) {
-    Request *req = BuscarDato(lRequest, peticion);
-    std::list<list <Request> >::iterator it=lRequest.begin();
-    std::list<Request>::iterator jt=it->begin();
-    Request aux;
-    bool encontrado = false;
+    std::list<Request>::iterator data = BuscarDato(lRequest, peticion);
+    bool insertado = false;
     
-    // Si se encuentra entre las peticiones existentes
-    if (req) {
-        //aumentar número de peticiones
-        req->setNRequest(1);
+    if (data != lRequest.end()->end()) {
+        Request r = *data;
+        r.setNRequest(1);
         
-        //cambiar prioridad
-        aux=*req;
-        
-        while (it!=lRequest.end() && !encontrado) {
-            while (jt != it->end() && !encontrado) {
-                if (jt->getCod() == req->getCod()) {
-                    it->erase(jt);
-                    encontrado = true;
-                }
-                ++jt;
-            }
+        list< list<Request> >::iterator it = lRequest.begin();
+        while (it != lRequest.end() && !insertado) {
+            it->remove(*data);
+            if (it->empty())
+                it = lRequest.erase(it);
+            else if (it->begin()->getNRequest() == r.getNRequest()) {
+                it->push_back(r);
+                insertado = true;
+            }                
             ++it;
         }
-        if (encontrado) {
-            //Buscar si hay una lista con prioridad n+1
-            if (it!=lRequest.end()) {
-                if (it->begin()->getNRequest()==aux.getNRequest()) {
-                    it->push_back(aux);
-                } else {
-                    list<Request> l;
-                    l.push_back(aux);
-                    lRequest.insert(it,l);
-                }
-            } else {
-                list<Request> l;
-                l.push_back(aux);
-                lRequest.push_back(l);
-            }
+        if (insertado == false) {
+            list<Request> l;
+            l.push_back(r);
+            lRequest.push_back(l);
         }
     } else {
-        // Crea el objeto Request con 1 petición por defecto
-        Request Req(peticion);
+        Request r(peticion);
         
-        // Hay que saber si hay lista de prioriad 1
-        if (it->begin()->getNRequest() == 1) {
-            it->push_back(Req);
-        } else {
-            list<Request> l;
-            l.push_back(Req); 
-            lRequest.push_front(l);         // Al meterla al principio ya 
-                                            // tiene prioridad 1 (baja)
+        if (!lRequest.empty()) {
+            // Si el vector estuviera ordenado esto sería suficiente cambiando la condición del if...
+            // lRequest.begin()->push_back(r);
+            list< list<Request> >::iterator it = lRequest.begin();
+            while (it != lRequest.end() && !insertado) {
+                if (it->front().getNRequest() == 1) {
+                    it->push_back(r);
+                    insertado = true;
+                }
+                ++it;
+            }
+            if (!insertado) {
+                list<Request> l;
+                l.push_back(r);
+                lRequest.push_back(l);
+            }   
         }
-
+        else {
+            list<Request> l;
+            l.push_back(r);
+            lRequest.push_back(l);
+        }
     }
-      
+    // lRequest.sort();
 }
 
 int main(int argc, char** argv) {
@@ -180,29 +174,18 @@ int main(int argc, char** argv) {
     list<Song> lSongs;
     list< list<Request> > lRequest;
     
-    list<Request> liR;
-    
-//    for (int i = 0; i < 5; ++i) {
-//        for (int j = 0; j < 5; ++j) {
-//            Request r(j);
-//            liR.push_back(r);
-//        }
-//        lRequest.push_back(liR);
-        AnadePeticion(lRequest, 4);
-        AnadePeticion(lRequest, 4);
-        AnadePeticion(lRequest, 2);
-        AnadePeticion(lRequest, 2);
-        AnadePeticion(lRequest, 1);
-        AnadePeticion(lRequest, 5);
-        
-//    }
-    
-    Request *r = BuscarDato(lRequest, 8);
-    if (r)
-        cout << "He encontrado la canción con código: " << r->getCod() << " con " << r->getNRequest() << " peticiones" << endl;
-    else
-        cout << "El dato no se ha encontrado..." << endl;
-    
+    AnadePeticion(lRequest, 4);
+    AnadePeticion(lRequest, 4);
+    AnadePeticion(lRequest, 4);
+    AnadePeticion(lRequest, 4);
+    AnadePeticion(lRequest, 2);
+    AnadePeticion(lRequest, 2);
+    AnadePeticion(lRequest, 2);
+    AnadePeticion(lRequest, 1);
+    AnadePeticion(lRequest, 5);
+    AnadePeticion(lRequest, 5);
+    AnadePeticion(lRequest, 3);
+
     //Mostrar lista peticiones
     list< list<Request> >::iterator i;
     list<Request>::iterator j;
