@@ -175,6 +175,30 @@ void AnadePeticion(std::list< list<Request> > &lRequest, int peticion) {
       
 }
 
+void BuscaCodigo(std::list<Song> &lSongs, string letra) {
+    cout << "\nBuscando: " << endl;
+    std::list<Song>::iterator it=lSongs.begin();
+    string objetivo;
+    
+    cin >> objetivo;
+    
+    while (it!=lSongs.end()) {
+        std::size_t found;
+        if (letra == "A")
+            found = it->GetArtist().find(objetivo);
+        else
+            found = it->GetTitle().find(objetivo);
+        
+        if (found!=std::string::npos) {
+            cout << it->GetCode() << " - " << 
+                    it->GetArtist() << " - " << 
+                    it->GetTitle() << endl;
+        }
+        it++;
+    }
+
+}
+
 int main(int argc, char** argv) {
     RadioApp app;
     list<Song> lSongs;
@@ -182,56 +206,120 @@ int main(int argc, char** argv) {
     
     list<Request> liR;
     
-//    for (int i = 0; i < 5; ++i) {
-//        for (int j = 0; j < 5; ++j) {
-//            Request r(j);
-//            liR.push_back(r);
-//        }
-//        lRequest.push_back(liR);
+    // Añadimos algunas peticiones para tener datos en la lista y hacer pruebas
         AnadePeticion(lRequest, 4);
         AnadePeticion(lRequest, 4);
         AnadePeticion(lRequest, 2);
         AnadePeticion(lRequest, 2);
         AnadePeticion(lRequest, 1);
         AnadePeticion(lRequest, 5);
-        
-//    }
+    // ========================================================================
     
+        
+    // Prueba para buscar datos     
     Request *r = BuscarDato(lRequest, 8);
     if (r)
-        cout << "He encontrado la canción con código: " << r->getCod() << " con " << r->getNRequest() << " peticiones" << endl;
+        cout << "\nHe encontrado la canción con código: " << r->getCod() << 
+                " con " << r->getNRequest() << " peticiones.\n" << endl;
     else
-        cout << "El dato no se ha encontrado..." << endl;
+        cout << "\nEl dato no se ha encontrado...\n" << endl;
+    // ========================================================================
+
     
-    //Mostrar lista peticiones
-    list< list<Request> >::iterator i;
-    list<Request>::iterator j;
+    cout << "\n\n\n";
     
-    for (i = lRequest.begin(); i != lRequest.end(); ++i) {
-        cout << "Prioridad " << i->begin()->getNRequest() << endl;
-        for (j = i->begin(); j != i->end(); ++j) {
-            cout << j->getCod() << " - " <<  j->getNRequest() << endl;
-        }
-    }
-    
-    
+    ////////////////////////
+    // PROGRAMA PRINCIPAL //
+    ////////////////////////
     
     int peticion;
 
     CargarListaCaciones(lSongs);
     
-    //Mostrar lista de canciones
-//    for (std::list<Song>::iterator it=lSongs.begin(); it!=lSongs.end(); ++it) {
-//        cout << it->GetCode() << " - " << it->GetTitle() << endl;        
-//    }
+    //======//
+    // MENU //
+    //======//
+    int opcion;         // opción seleccionada en el menú
+    cout << "\n¡Bienvenido a Radionauta v3!" << endl;
+    cout << "Solicita aquí tu canción preferida. \n" << endl;
+    while (opcion != 5) {
+        
+        cout << "Opciones:" << endl;
+        cout << "1. Añadir petición." << endl;
+        cout << "2. Eliminar petición." << endl;
+        cout << "3. Mostrar canciones disponibles." << endl;
+        cout << "4. Mostrar lista de peticiones." << endl;
+        cout << "5. Exit" << endl;
+        cout << "Por favor, introduce el número deseado y pulsa 'Enter': ";
+        
+        // Evitar malas entradas de teclado
+        cin >> opcion;
+        while (opcion < 1 || opcion > 5) {
+            cin.clear();
+            cin.ignore(100, '\n');
+            cout << "Por favor, introduce un número entre 1 y 5: ";
+            cin >> opcion;
+        }
+        
+        switch (opcion) {
+            case 1: {
+                cout << "\nAñadir o buscar canción." << endl;
+                cout << "C - Código canción, A - Artista, T - Título." << endl;
+                string letra;
     
-    //Añadir peticiones
-    cout << "Introduce el código de la canción deseada (1-500)." << 
-            "\nIntroduce 0 para salir." << endl;
-//    
-//    cin >> peticion;
-//    
-//    AnadePeticion (lRequest, peticion);
+                cin >> letra;
+    
+                while (letra != "A" && letra != "T" && letra != "C") {
+                    cin.clear();
+                    cin.ignore(100, '\n');
+                    cout << "\nPor favor, 'C' para Código, 'A' para Artista o 'T' para Título: ";
+                    cin >> letra;
+                }
+                
+                if (letra == "C") {
+                    cout << "\nIntroduce el código deseado: ";
+                    cin >> peticion;
+                    AnadePeticion(lRequest, peticion);
+                } else {
+                    BuscaCodigo(lSongs, letra);
+                    cout << "\nIntroduce el código deseado: ";
+                    cin >> peticion;
+                    AnadePeticion(lRequest, peticion);
+                } 
+                break;
+            }
+            case 2: 
+                //Borrar petición
+                break;
+            case 3: 
+                cout << "Canciones disponibles:" << endl;
+                //Mostrar lista de canciones
+                for (std::list<Song>::iterator it=lSongs.begin(); it!=lSongs.end(); ++it) {
+                    cout << it->GetCode() << " - " << it->GetTitle() << endl;        
+                }
+                break;
+            case 4: 
+                cout << "Lista de peticiones:" << endl;
+                //Mostrar lista peticiones
+                list< list<Request> >::iterator i;
+                list<Request>::iterator j;
+
+                for (i = lRequest.begin(); i != lRequest.end(); ++i) {
+                    cout << "Prioridad " << i->begin()->getNRequest() << endl;
+                    for (j = i->begin(); j != i->end(); ++j) {
+                        cout << j->getCod() << " - " <<  j->getNRequest() << endl;
+                    }
+                }
+                break;
+        }
+    }
+    
+//    //Añadir peticiones
+//    cout << "Introduce el código de la canción deseada (1-500)." << 
+//            "\nIntroduce 0 para salir." << endl;
+    
+    
+    AnadePeticion (lRequest, peticion);
     
     
     app.solicitarCanciones();
