@@ -93,17 +93,33 @@ void CargarListaCaciones(std::list<Song> &lSongs) {
     }
 }
 
+void AnadePeticion(std::list< list<Request> > lRequest, int peticion) {
+    Request Req(peticion);
+    
+}
+
+
 int main(int argc, char** argv) {
     RadioApp app;
     list<Song> lSongs;
+    list< list<Request> > lRequest;
+    int peticion;
     
     CargarListaCaciones(lSongs);
     
+    //Mostrar lista de canciones
     for (std::list<Song>::iterator it=lSongs.begin(); it!=lSongs.end(); ++it) {
         cout << it->GetCode() << " - " << it->GetTitle() << endl;        
     }
+    
+    //Añadir peticiones
     cout << "Introduce el código de la canción deseada (1-500)." << 
             "\nIntroduce 0 para salir." << endl;
+    
+    cin >> peticion;
+    
+    AnadePeticion (lRequest, peticion);
+    
     
     app.solicitarCanciones();
 
