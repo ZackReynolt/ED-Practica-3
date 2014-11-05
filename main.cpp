@@ -129,11 +129,11 @@ void AnadePeticion(std::list< list<Request> > &lRequest, int peticion) {
         req->setNRequest(1);
         
         //cambiar prioridad
-        aux=req;
+        aux=*req;
         
         while (it!=lRequest.end() && !encontrado) {
-            while (jt!=it->end() && !encontrado) {
-                if (jt->getCod() == req) {
+            while (jt != it->end() && !encontrado) {
+                if (jt->getCod() == req->getCod()) {
                     it->erase(jt);
                     encontrado = true;
                 }
@@ -142,12 +142,21 @@ void AnadePeticion(std::list< list<Request> > &lRequest, int peticion) {
             ++it;
         }
         if (encontrado) {
-            ++it;
-            it->push_back(aux);
+            //Buscar si hay una lista con prioridad n+1
+            if (it!=lRequest.end()) {
+                if (it->begin()->getNRequest()==aux.getNRequest()) {
+                    it->push_back(aux);
+                } else {
+                    list<Request> l;
+                    l.push_back(aux);
+                    lRequest.insert(it,l);
+                }
+            } else {
+                list<Request> l;
+                l.push_back(aux);
+                lRequest.push_back(l);
+            }
         }
-        
-        
-        
     } else {
         // Crea el objeto Request con 1 petición por defecto
         Request Req(peticion);
@@ -173,15 +182,20 @@ int main(int argc, char** argv) {
     
     list<Request> liR;
     
-    for (int i = 0; i < 5; ++i) {
+//    for (int i = 0; i < 5; ++i) {
 //        for (int j = 0; j < 5; ++j) {
 //            Request r(j);
 //            liR.push_back(r);
 //        }
 //        lRequest.push_back(liR);
-        AnadePeticion(lRequest, i);
+        AnadePeticion(lRequest, 4);
+        AnadePeticion(lRequest, 4);
         AnadePeticion(lRequest, 2);
-    }
+        AnadePeticion(lRequest, 2);
+        AnadePeticion(lRequest, 1);
+        AnadePeticion(lRequest, 5);
+        
+//    }
     
     Request *r = BuscarDato(lRequest, 8);
     if (r)
