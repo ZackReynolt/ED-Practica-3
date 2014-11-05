@@ -169,11 +169,66 @@ void AnadePeticion(std::list< list<Request> > &lRequest, int peticion) {
     // lRequest.sort();
 }
 
+void BuscaCodigo(std::list<Song> &lSongs, string letra) {
+    cout << "\nBuscando: " << endl;
+    std::list<Song>::iterator it=lSongs.begin();
+    string objetivo;
+    
+    cin >> objetivo;
+    
+    while (it!=lSongs.end()) {
+        std::size_t found;
+        if (letra == "A")
+            found = it->GetArtist().find(objetivo);
+        else
+            found = it->GetTitle().find(objetivo);
+        
+        if (found!=std::string::npos) {
+            cout << it->GetCode() << " - " << 
+                    it->GetArtist() << " - " << 
+                    it->GetTitle() << endl;
+        }
+        it++;
+    }
+
+}
+
+/**
+ * 
+ * @param lRequest  Lista de listas de peticiones
+ * @param vRequest  Vector con las canciones ya reproducidas
+ * @return          Booleano que indica si se puede reproducir o no una petición
+ * @description     Esta función mira las 100 últimas canciones reproducidas 
+ *                  (se deben ir añadiendo al vector para dicha función) e
+ *                  informa de si puede reproducirse una canción o no.
+ */
+bool PuedeReproducirPet (std::list< list<Request> > &lRequest, vector<Request> &vRequest,
+        int peticion) {
+    bool puede = true;
+    
+    //Ver si la petición es una de las últimas 100 reproducidas
+    if (vRequest.size() != 0){
+        int j = 0;
+        while (j < vRequest.size() && j < 100) {
+            if (vRequest[j].getCod() == peticion)
+                puede = false;
+            j++;
+        }
+    }
+    
+    return puede;
+}
+
 int main(int argc, char** argv) {
-    RadioApp app;
     list<Song> lSongs;
     list< list<Request> > lRequest;
+    vector<Request> vRequest;
+
+    /////////////////
+    //   PRUEBAS   //
+    /////////////////
     
+
     AnadePeticion(lRequest, 4);
     AnadePeticion(lRequest, 4);
     AnadePeticion(lRequest, 4);
@@ -196,28 +251,101 @@ int main(int argc, char** argv) {
             cout << j->getCod() << " - " <<  j->getNRequest() << endl;
         }
     }
+
+    // ========================================================================
+        
     
-    
+    ////////////////////////
+    // PROGRAMA PRINCIPAL //
+    ////////////////////////
     
     int peticion;
 
     CargarListaCaciones(lSongs);
     
-    //Mostrar lista de canciones
-//    for (std::list<Song>::iterator it=lSongs.begin(); it!=lSongs.end(); ++it) {
-//        cout << it->GetCode() << " - " << it->GetTitle() << endl;        
-//    }
+    //======//
+    // MENU //
+    //======//
+    int opcion;         // opción seleccionada en el menú
+    cout << "\n¡Bienvenido a Radionauta v3!" << endl;
+    cout << "Solicita aquí tu canción preferida. \n" << endl;
+    while (opcion != 5) {
+        
+        cout << "Opciones:" << endl;
+        cout << "1. Añadir petición." << endl;
+        cout << "2. Reproducir canciones." << endl;
+        cout << "3. Mostrar canciones disponibles." << endl;
+        cout << "4. Mostrar lista de peticiones." << endl;
+        cout << "5. Exit" << endl;
+        cout << "Por favor, introduce el número deseado y pulsa 'Enter': ";
+        
+        // Evitar malas entradas de teclado
+        cin >> opcion;
+        while (opcion < 1 || opcion > 5) {
+            cin.clear();
+            cin.ignore(100, '\n');
+            cout << "Por favor, introduce un número entre 1 y 5: ";
+            cin >> opcion;
+        }
+        
+        switch (opcion) {
+            case 1: {
+                cout << "\nAñadir o buscar canción." << endl;
+                cout << "C - Código canción, A - Artista, T - Título." << endl;
+                string letra;
     
-    //Añadir peticiones
-    cout << "Introduce el código de la canción deseada (1-500)." << 
-            "\nIntroduce 0 para salir." << endl;
-//    
-//    cin >> peticion;
-//    
-//    AnadePeticion (lRequest, peticion);
+                cin >> letra;
     
-    
-    app.solicitarCanciones();
+                while (letra != "A" && letra != "T" && letra != "C") {
+                    cin.clear();
+                    cin.ignore(100, '\n');
+                    cout << "\nPor favor, 'C' para Código, 'A' para Artista o 'T' para Título: ";
+                    cin >> letra;
+                }
+                
+                if (letra == "C") {
+                    cout << "\nIntroduce el código deseado: ";
+                    cin >> peticion;
+                    AnadePeticion(lRequest, peticion);
+                } else {
+                    BuscaCodigo(lSongs, letra);
+                    cout << "\nIntroduce el código deseado: ";
+                    cin >> peticion;
+                    AnadePeticion(lRequest, peticion);
+                } 
+                break;
+            }
+            case 2: {
+                //Reproducir canción
+                RadioApp app;
+                cout << "\n\nIntroduce el código de la canción a reproducir." << endl;
+                cout << "Introduce '0' en cualquier momento para interrumpir la "
+                        "reproducción" << endl;
+                app.solicitarCanciones(); 
+                break;
+            }
+            case 3: 
+                cout << "Canciones disponibles:" << endl;
+                //Mostrar lista de canciones
+                for (std::list<Song>::iterator it=lSongs.begin(); it!=lSongs.end(); ++it) {
+                    cout << it->GetCode() << " - " << it->GetTitle() << endl;        
+                }
+                break;
+            case 4: 
+                cout << "Lista de peticiones:" << endl;
+                //Mostrar lista peticiones
+                list< list<Request> >::iterator i;
+                list<Request>::iterator j;
+
+                for (i = lRequest.begin(); i != lRequest.end(); ++i) {
+                    cout << "Prioridad " << i->begin()->getNRequest() << endl;
+                    for (j = i->begin(); j != i->end(); ++j) {
+                        cout << j->getCod() << " - " <<  j->getNRequest() << endl;
+                    }
+                }
+                break;
+        }
+    }
     
     return 0;
 }
