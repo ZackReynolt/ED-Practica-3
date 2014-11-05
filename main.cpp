@@ -94,7 +94,20 @@ void CargarListaCaciones(std::list<Song> &lSongs) {
 }
 
 void AnadePeticion(std::list< list<Request> > lRequest, int peticion) {
-    Request Req(peticion);
+    
+    // Si se encuentra entre las peticiones existentes
+    if () {
+        //aumentar número de peticiones
+        //cambiar prioridad
+    } else {
+        // Crea el objeto Request con 1 petición por defecto
+        Request Req(peticion);
+        
+        lRequest.push_front(list.push_back(Req));   // Al meterla al principio ya 
+                                                    // tiene prioridad 1 (baja)
+        
+    }
+    
     
 }
 
