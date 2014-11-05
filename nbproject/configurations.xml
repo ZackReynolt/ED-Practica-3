@@ -4,10 +4,14 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>fast_mutex.h</itemPath>
+      <itemPath>millisleep.h</itemPath>
+      <itemPath>tinythread.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
                    projectFiles="true">
+      <itemPath>tinythread.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
@@ -35,8 +39,21 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibStdlibItem>PosixThreads</linkerLibStdlibItem>
+          </linkerLibItems>
+        </linkerTool>
       </compileType>
+      <item path="fast_mutex.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="millisleep.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tinythread.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tinythread.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -59,7 +76,15 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="fast_mutex.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="millisleep.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tinythread.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tinythread.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>
