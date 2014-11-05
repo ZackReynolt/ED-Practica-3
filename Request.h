@@ -28,6 +28,7 @@ public:
     int getCod          () const;
     bool operator==     (const Request &orig);
     bool operator<      (const Request &orig);
+    void operator=      (const Request &orig);
 };
 
 Request::Request() {
@@ -75,6 +76,11 @@ bool Request::operator  <(const Request& orig) {
     if (this->_nRequest < orig._nRequest)
         return true;
     return false;
+}
+
+void Request::operator  =(const Request& orig) {
+    this->_cod      = orig._cod;
+    this->_nRequest = orig._nRequest;
 }
 
 #endif	/* REQUEST_H */
