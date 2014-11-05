@@ -199,10 +199,37 @@ void BuscaCodigo(std::list<Song> &lSongs, string letra) {
 
 }
 
+/**
+ * 
+ * @param lRequest  Lista de listas de peticiones
+ * @param vRequest  Vector con las canciones ya reproducidas
+ * @return          Booleano que indica si se puede reproducir o no una petición
+ * @description     Esta función mira las 100 últimas canciones reproducidas 
+ *                  (se deben ir añadiendo al vector para dicha función) e
+ *                  informa de si puede reproducirse una canción o no.
+ */
+bool PuedeReproducirPet (std::list< list<Request> > &lRequest, vector<Request> &vRequest,
+        int peticion) {
+    bool puede = true;
+    
+    //Ver si la petición es una de las últimas 100 reproducidas
+    if (vRequest.size() != 0){
+        int j = 0;
+        while (j < vRequest.size() && j < 100) {
+            if (vRequest[j].getCod() == peticion)
+                puede = false;
+            j++;
+        }
+    }
+    
+    return puede;
+}
+
 int main(int argc, char** argv) {
     RadioApp app;
     list<Song> lSongs;
     list< list<Request> > lRequest;
+    vector<Request> vRequest;
     
     list<Request> liR;
     
@@ -246,7 +273,7 @@ int main(int argc, char** argv) {
         
         cout << "Opciones:" << endl;
         cout << "1. Añadir petición." << endl;
-        cout << "2. Eliminar petición." << endl;
+        cout << "2. Reproducir canciones." << endl;
         cout << "3. Mostrar canciones disponibles." << endl;
         cout << "4. Mostrar lista de peticiones." << endl;
         cout << "5. Exit" << endl;
@@ -289,7 +316,12 @@ int main(int argc, char** argv) {
                 break;
             }
             case 2: 
-                //Borrar petición
+                //Reproducir canción
+                if (PuedeReproducirPet(lRequest,vRequest,peticion)){
+                    cout << "\nIntroduce el código de la canción a reproducir" << endl;
+                    app.solicitarCanciones();
+                } else
+                    cout << "La canción ya ha sido reproducida recientemente" << endl;
                 break;
             case 3: 
                 cout << "Canciones disponibles:" << endl;
@@ -313,16 +345,6 @@ int main(int argc, char** argv) {
                 break;
         }
     }
-    
-//    //Añadir peticiones
-//    cout << "Introduce el código de la canción deseada (1-500)." << 
-//            "\nIntroduce 0 para salir." << endl;
-    
-    
-    AnadePeticion (lRequest, peticion);
-    
-    
-    app.solicitarCanciones();
     
     return 0;
 }
