@@ -25,7 +25,9 @@ class RadioApp {
     }
 
 public:
-
+    
+    vector<Request> vRequest;
+    
     RadioApp() : threadReproducirCanciones(hebraReproducirCanciones, this) {
         pinchar = true;
     }
@@ -45,6 +47,9 @@ public:
                 cout << "Reproduciendo canción " << cancion << " ..." << endl;
                 // Simular el tiempo de reproducción de la canción (entre 2 y 12 seg.)
                 millisleep(2000 + 1000 * (rand() % 10));
+                Request r(cancion);
+                
+                vRequest.push_back(r);       
             }
             
         } while (pinchar);
@@ -55,11 +60,33 @@ public:
         
         // Pedir canciones hasta que se introduce "0"
         do {
+            
             cin >> cancion;
 
-            semaforo.lock();
-            canciones.push_back(cancion);
-            semaforo.unlock();
+            if (vRequest.size() != 0){
+                int j = 0;
+                bool reproducida = false;
+                while (j < vRequest.size() && j < 100 && !reproducida) {
+                    if (vRequest[j].getCod() == cancion) {
+                        cout << "La canción fue de las últimas 100 reproducidas" << endl;
+                        reproducida=true;
+                    }
+                    j++;
+                }
+                if (!reproducida) {
+                    semaforo.lock();
+                    canciones.push_back(cancion);
+                    semaforo.unlock();
+                }
+            } else {
+                semaforo.lock();
+                canciones.push_back(cancion);
+                semaforo.unlock();
+            }
+            
+            
+            
+            
 
         } while (cancion != 0);
 
@@ -222,7 +249,6 @@ bool PuedeReproducirPet (std::list< list<Request> > &lRequest, vector<Request> &
 int main(int argc, char** argv) {
     list<Song> lSongs;
     list< list<Request> > lRequest;
-    vector<Request> vRequest;
 
     /////////////////
     //   PRUEBAS   //
@@ -321,7 +347,7 @@ int main(int argc, char** argv) {
                 cout << "\n\nIntroduce el código de la canción a reproducir." << endl;
                 cout << "Introduce '0' en cualquier momento para interrumpir la "
                         "reproducción" << endl;
-                app.solicitarCanciones(); 
+                app.solicitarCanciones();
                 break;
             }
             case 3: 
