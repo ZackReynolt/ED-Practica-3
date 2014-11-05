@@ -93,6 +93,29 @@ void CargarListaCaciones(std::list<Song> &lSongs) {
     }
 }
 
+/**
+ * 
+ * @param lRequest  Lista de listas de peticiones
+ * @param codigo    Código de la canción que queremos buscar
+ * @return          Puntero al dato encontrado o nulo si no es el caso
+ * @description     Este método busca en la lista la canción pedida y devuelve un 
+ *                  puntero que apunta al dato de la petición solicitada.
+ */
+Request* BuscarDato(list< list<Request> > &lRequest, int codigo) {
+    list< list<Request> >::iterator i;
+    list<Request>::iterator j;
+    Request *r;
+    
+    for (i = lRequest.begin(); i != lRequest.end(); ++i){
+        for (j = i->begin(); j != i->end(); ++j) {
+            if (j->getCod() == codigo) {
+                return r = j.operator ->();
+            }
+        }
+    }
+    return 0;
+}
+
 void AnadePeticion(std::list< list<Request> > lRequest, int peticion) {
     
     // Si se encuentra entre las peticiones existentes
@@ -111,12 +134,30 @@ void AnadePeticion(std::list< list<Request> > lRequest, int peticion) {
     
 }
 
-
 int main(int argc, char** argv) {
     RadioApp app;
     list<Song> lSongs;
     list< list<Request> > lRequest;
+    
+//    Quita esto
+//    list<Request> liR;
+//    
+//    for (int i = 0; i < 5; ++i) {
+//        for (int j = 0; j < 5; ++j) {
+//            Request r(j);
+//            liR.push_back(r);
+//        }
+//        lRequest.push_back(liR);
+//    }
+//    
+//    Request *r = BuscarDato(lRequest, 8);
+//    if (r)
+//        cout << "He encontrado la canción con código: " << r->getCod() << " con " << r->getNRequest() << " peticiones" << endl;
+//    else
+//        cout << "El dato no se ha encontrado...";
+    
     int peticion;
+
     
     CargarListaCaciones(lSongs);
     
@@ -135,6 +176,6 @@ int main(int argc, char** argv) {
     
     
     app.solicitarCanciones();
-
+    
     return 0;
 }
