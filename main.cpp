@@ -1,9 +1,13 @@
 #include <cstdlib>
 #include <iostream>
 #include <vector>
+#include <fstream>
+#include <list>
 
 #include "tinythread.h"
 #include "millisleep.h"
+#include "Request.h"
+#include "Song.h"
 
 using namespace std;
 using namespace tthread;
@@ -64,8 +68,43 @@ public:
     }
 };
 
+void CargarListaCaciones(std::list<Song> &lSongs) {
+    try { 
+        fstream fi("canciones.txt");
+        string line, atribute[3];
+
+        while (!fi.eof()) {
+            getline(fi, line);
+            stringstream lineStream(line);
+
+            int i = 0;
+            while (getline(lineStream, atribute[i], '|')) {
+                i++;
+            };
+
+            int cod = atoi(atribute[0].c_str());
+            Song s(cod, atribute[1], atribute[2]);
+            lSongs.push_back(s);
+        }
+        fi.close();
+        lSongs.pop_back();
+    } catch (std::exception &e) {
+        cout << "No se ha podido abrir el archivo";
+    }
+}
+
 int main(int argc, char** argv) {
     RadioApp app;
+    list<Song> lSongs;
+    
+    CargarListaCaciones(lSongs);
+    
+    for (std::list<Song>::iterator it=lSongs.begin(); it!=lSongs.end(); ++it) {
+        cout << it->GetCode() << " - " << it->GetTitle() << endl;        
+    }
+    cout << "Introduce el código de la canción deseada (1-500)." << 
+            "\nIntroduce 0 para salir." << endl;
+    
     app.solicitarCanciones();
 
     return 0;

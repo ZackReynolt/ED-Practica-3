@@ -45,6 +45,10 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
+      <item path="Request.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Song.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="fast_mutex.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
@@ -76,6 +80,10 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="Request.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Song.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="fast_mutex.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
