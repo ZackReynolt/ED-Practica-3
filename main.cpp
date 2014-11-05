@@ -4,6 +4,8 @@
 
 #include "tinythread.h"
 #include "millisleep.h"
+#include "Request.h"
+#include "Song.h"
 
 using namespace std;
 using namespace tthread;
