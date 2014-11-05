@@ -230,8 +230,10 @@ int main(int argc, char** argv) {
     list<Song> lSongs;
     list< list<Request> > lRequest;
     vector<Request> vRequest;
-    
-    list<Request> liR;
+
+    /////////////////
+    //   PRUEBAS   //
+    /////////////////
     
     // Añadimos algunas peticiones para tener datos en la lista y hacer pruebas
         AnadePeticion(lRequest, 4);
