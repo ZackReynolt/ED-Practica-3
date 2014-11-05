@@ -235,6 +235,8 @@ int main(int argc, char** argv) {
     //   PRUEBAS   //
     /////////////////
     
+    list<Request> liR;
+    
     // Añadimos algunas peticiones para tener datos en la lista y hacer pruebas
         AnadePeticion(lRequest, 4);
         AnadePeticion(lRequest, 4);
