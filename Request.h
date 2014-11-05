@@ -27,6 +27,7 @@ public:
     void setCod         (int _cod);
     int getCod          () const;
     bool operator==     (const Request &orig);
+    bool operator<      (const Request &orig);
 };
 
 Request::Request() {
@@ -66,6 +67,12 @@ void Request::addRequest(int code) {
 
 bool Request::operator ==(const Request& orig) {
     if (_cod == orig._cod)
+        return true;
+    return false;
+}
+
+bool Request::operator  <(const Request& orig) {
+    if (this->_nRequest < orig._nRequest)
         return true;
     return false;
 }
