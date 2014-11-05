@@ -116,22 +116,54 @@ Request* BuscarDato(list< list<Request> > &lRequest, int codigo) {
     return 0;
 }
 
-void AnadePeticion(std::list< list<Request> > lRequest, int peticion) {
+void AnadePeticion(std::list< list<Request> > &lRequest, int peticion) {
+    Request *req = BuscarDato(lRequest, peticion);
+    std::list<list <Request> >::iterator it=lRequest.begin();
+    std::list<Request>::iterator jt=it->begin();
+    Request aux;
+    bool encontrado = false;
     
     // Si se encuentra entre las peticiones existentes
-    if () {
+    if (req) {
         //aumentar número de peticiones
+        req->setNRequest(1);
+        
         //cambiar prioridad
+        aux=req;
+        
+        while (it!=lRequest.end() && !encontrado) {
+            while (jt!=it->end() && !encontrado) {
+                if (jt->getCod() == req) {
+                    it->erase(jt);
+                    encontrado = true;
+                }
+                ++jt;
+            }
+            ++it;
+        }
+        if (encontrado) {
+            ++it;
+            it->push_back(aux);
+        }
+        
+        
+        
     } else {
         // Crea el objeto Request con 1 petición por defecto
         Request Req(peticion);
         
-        lRequest.push_front(list.push_back(Req));   // Al meterla al principio ya 
-                                                    // tiene prioridad 1 (baja)
-        
+        // Hay que saber si hay lista de prioriad 1
+        if (it->begin()->getNRequest() == 1) {
+            it->push_back(Req);
+        } else {
+            list<Request> l;
+            l.push_back(Req); 
+            lRequest.push_front(l);         // Al meterla al principio ya 
+                                            // tiene prioridad 1 (baja)
+        }
+
     }
-    
-    
+      
 }
 
 int main(int argc, char** argv) {
@@ -139,40 +171,53 @@ int main(int argc, char** argv) {
     list<Song> lSongs;
     list< list<Request> > lRequest;
     
-//    Quita esto
-//    list<Request> liR;
-//    
-//    for (int i = 0; i < 5; ++i) {
+    list<Request> liR;
+    
+    for (int i = 0; i < 5; ++i) {
 //        for (int j = 0; j < 5; ++j) {
 //            Request r(j);
 //            liR.push_back(r);
 //        }
 //        lRequest.push_back(liR);
-//    }
-//    
-//    Request *r = BuscarDato(lRequest, 8);
-//    if (r)
-//        cout << "He encontrado la canción con código: " << r->getCod() << " con " << r->getNRequest() << " peticiones" << endl;
-//    else
-//        cout << "El dato no se ha encontrado...";
+        AnadePeticion(lRequest, i);
+        AnadePeticion(lRequest, 2);
+    }
+    
+    Request *r = BuscarDato(lRequest, 8);
+    if (r)
+        cout << "He encontrado la canción con código: " << r->getCod() << " con " << r->getNRequest() << " peticiones" << endl;
+    else
+        cout << "El dato no se ha encontrado..." << endl;
+    
+    //Mostrar lista peticiones
+    list< list<Request> >::iterator i;
+    list<Request>::iterator j;
+    
+    for (i = lRequest.begin(); i != lRequest.end(); ++i) {
+        cout << "Prioridad " << i->begin()->getNRequest() << endl;
+        for (j = i->begin(); j != i->end(); ++j) {
+            cout << j->getCod() << " - " <<  j->getNRequest() << endl;
+        }
+    }
+    
+    
     
     int peticion;
 
-    
     CargarListaCaciones(lSongs);
     
     //Mostrar lista de canciones
-    for (std::list<Song>::iterator it=lSongs.begin(); it!=lSongs.end(); ++it) {
-        cout << it->GetCode() << " - " << it->GetTitle() << endl;        
-    }
+//    for (std::list<Song>::iterator it=lSongs.begin(); it!=lSongs.end(); ++it) {
+//        cout << it->GetCode() << " - " << it->GetTitle() << endl;        
+//    }
     
     //Añadir peticiones
     cout << "Introduce el código de la canción deseada (1-500)." << 
             "\nIntroduce 0 para salir." << endl;
-    
-    cin >> peticion;
-    
-    AnadePeticion (lRequest, peticion);
+//    
+//    cin >> peticion;
+//    
+//    AnadePeticion (lRequest, peticion);
     
     
     app.solicitarCanciones();
