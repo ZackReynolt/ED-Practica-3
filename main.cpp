@@ -226,7 +226,6 @@ bool PuedeReproducirPet (std::list< list<Request> > &lRequest, vector<Request> &
 }
 
 int main(int argc, char** argv) {
-    RadioApp app;
     list<Song> lSongs;
     list< list<Request> > lRequest;
     vector<Request> vRequest;
@@ -319,14 +318,15 @@ int main(int argc, char** argv) {
                 } 
                 break;
             }
-            case 2: 
+            case 2: {
                 //Reproducir canción
-                if (PuedeReproducirPet(lRequest,vRequest,peticion)){
-                    cout << "\nIntroduce el código de la canción a reproducir" << endl;
-                    app.solicitarCanciones();
-                } else
-                    cout << "La canción ya ha sido reproducida recientemente" << endl;
+                RadioApp app;
+                cout << "\n\nIntroduce el código de la canción a reproducir." << endl;
+                cout << "Introduce '0' en cualquier momento para interrumpir la "
+                        "reproducción" << endl;
+                app.solicitarCanciones(); 
                 break;
+            }
             case 3: 
                 cout << "Canciones disponibles:" << endl;
                 //Mostrar lista de canciones
