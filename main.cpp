@@ -151,48 +151,35 @@ void AnadePeticion(std::list< list<Request> > &lRequest, int peticion) {
         Request r = *data;
         r.setNRequest(1);
         
-        
         list< list<Request> >::iterator it = lRequest.begin();
-        while (it != lRequest.end()) {
+        while (it != lRequest.end() && !insertado) {
             it->remove(*data);
             if (it->empty())
                 it = lRequest.erase(it);
-            else if (it->begin()->getNRequest() == r.getNRequest())
+            if (it != lRequest.end() && it->begin()->getNRequest() == r.getNRequest()){
                 it->push_back(r);
+                insertado = true;
+            }
             ++it;
         }
-        if (insertado == false) {
-            list<Request> l;
-            l.push_back(r);
-            lRequest.push_back(l);
-        }
-    } else {
-        Request r(peticion);
-        
-        if (!lRequest.empty()) {
-            // Si el vector estuviera ordenado esto sería suficiente cambiando la condición del if...
-            // lRequest.begin()->push_back(r);
-            list< list<Request> >::iterator it = lRequest.begin();
-            while (it != lRequest.end() && !insertado) {
-                if (it->front().getNRequest() == 1) {
-                    it->push_back(r);
-                    insertado = true;
-                }
-                ++it;
-            }
-            if (!insertado) {
+        if (!insertado) {
                 list<Request> l;
                 l.push_back(r);
                 lRequest.push_back(l);
-            }   
-        }
+                insertado = true;
+            }
+    } else {
+        Request r(peticion);
+        
+        if (!lRequest.empty() && lRequest.begin()->begin()->getNRequest() == 1)
+            lRequest.begin()->push_back(r);
         else {
             list<Request> l;
             l.push_back(r);
             lRequest.push_back(l);
         }
     }
-    // lRequest.sort();
+    lRequest.sort();
 }
 
 void BuscaCodigo(std::list<Song> &lSongs, string letra) {

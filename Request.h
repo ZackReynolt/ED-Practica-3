@@ -27,7 +27,7 @@ public:
     void setCod         (int _cod);
     int getCod          () const;
     bool operator==     (const Request &orig);
-    bool operator<      (const Request &orig);
+    bool operator<      (const Request &orig) const;
     void operator=      (const Request &orig);
 };
 
@@ -72,7 +72,7 @@ bool Request::operator ==(const Request& orig) {
     return false;
 }
 
-bool Request::operator  <(const Request& orig) {
+bool Request::operator  <(const Request& orig) const {
     if (_nRequest < orig._nRequest)
         return true;
     return false;
