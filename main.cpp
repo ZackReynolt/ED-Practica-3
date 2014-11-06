@@ -54,13 +54,25 @@ public:
         } while (pinchar);
     }
 
-    void solicitarCanciones() {
+    void solicitarCanciones(std::list< list<Request> > &lRequest) {
         int cancion;
         
         // Pedir canciones hasta que se introduce "0"
         do {
             
-            cin >> cancion;
+            //No la mete el usuario
+            //cin >> cancion;
+            //La coge de la lista
+            
+            
+            if (!lRequest.empty()) {
+                //Coge la que tenga más prioridad
+                cancion = lRequest.back().back().getCod();
+                lRequest.back().pop_back();
+            } else {
+                cancion = 0;
+            }
+            
 
             if (vRequest.size() != 0){
                 int j = 0;
@@ -371,10 +383,11 @@ int main(int argc, char** argv) {
             }
             case 2: {
                 //Reproducir canción
-                cout << "\n\nIntroduce el código de la canción a reproducir." << endl;
-                cout << "Introduce '0' en cualquier momento para interrumpir la "
-                        "reproducción" << endl;
-                app.solicitarCanciones();
+//                cout << "\n\nIntroduce el código de la canción a reproducir." << endl;
+//                cout << "Introduce '0' en cualquier momento para interrumpir la "
+//                        "reproducción" << endl;
+                //El usuario no introduce nada, las va a ir cogiendo de la lista
+                app.solicitarCanciones(lRequest);
                 break;
             }
             case 3:
@@ -383,6 +396,7 @@ int main(int argc, char** argv) {
                 for (int i = 0; i < app.vRequest.size(); ++i) {
                     cout << app.vRequest[i].getCod() << endl;
                 }
+                cout << "\n";
                 break;
             case 4: 
                 cout << "Canciones disponibles:" << endl;
@@ -409,3 +423,4 @@ int main(int argc, char** argv) {
     
     return 0;
 }
+
