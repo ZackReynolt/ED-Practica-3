@@ -25,8 +25,7 @@ class RadioApp {
     }
 
 public:
-    
-    vector<Request> vRequest;
+    vector<Request> vRequest;   //Vector de canciones reproducidas
     
     RadioApp() : threadReproducirCanciones(hebraReproducirCanciones, this) {
         pinchar = true;
@@ -68,7 +67,8 @@ public:
                 bool reproducida = false;
                 while (j < vRequest.size() && j < 100 && !reproducida) {
                     if (vRequest[j].getCod() == cancion) {
-                        cout << "La canción fue de las últimas 100 reproducidas" << endl;
+                        cout << "La canción " << cancion 
+                                <<  " fue de las últimas 100 reproducidas" << endl;
                         reproducida=true;
                     }
                     j++;
@@ -95,6 +95,14 @@ public:
     }
 };
 
+/**
+ * 
+ * @param lSongs    Lista con las canciones (por referencia)
+ * @return          void
+ * @description     Este procedimiento carga en la lista de canciones todas las
+ *                  canciones que se encuentran en el archivo de canciones para
+ *                  tal fin ("canciones.txt") en el directorio del proyecto.
+ */
 void CargarListaCaciones(std::list<Song> &lSongs) {
     try { 
         fstream fi("canciones.txt");
@@ -143,6 +151,14 @@ list<Request>::iterator BuscarDato(list< list<Request> > &lRequest, int codigo) 
     return lRequest.end()->end();
 }
 
+/**
+ * 
+ * @param lRequest  Lista de listas de peticiones
+ * @param peticion  Código de la canción que queremos añadir
+ * @return          void
+ * @description     Este procedimiento añade a la lista de peticiones la canción
+ *                  que le indiquemos como segundo parámetro de entrada.
+ */
 void AnadePeticion(std::list< list<Request> > &lRequest, int peticion) {
     std::list<Request>::iterator data = BuscarDato(lRequest, peticion);
     bool insertado = false;
@@ -182,6 +198,15 @@ void AnadePeticion(std::list< list<Request> > &lRequest, int peticion) {
     lRequest.sort();
 }
 
+/**
+ * 
+ * @param lSongs    Lista de canciones del fichero canciones.txt
+ * @param letra     String que identifica el tipo de búsqueda 
+ * @return          void
+ * @description     Este procedimiento busca mediante artista (A) o título (T)
+ *                  los códigos de las canciones de la lista de canciones y los
+ *                  muestra por pantalla.
+ */
 void BuscaCodigo(std::list<Song> &lSongs, string letra) {
     cout << "\nBuscando: " << endl;
     std::list<Song>::iterator it=lSongs.begin();
@@ -232,6 +257,7 @@ bool PuedeReproducirPet (std::list< list<Request> > &lRequest, vector<Request> &
     return puede;
 }
 
+
 int main(int argc, char** argv) {
     list<Song> lSongs;
     list< list<Request> > lRequest;
@@ -279,24 +305,27 @@ int main(int argc, char** argv) {
     // MENU //
     //======//
     int opcion;         // opción seleccionada en el menú
+    RadioApp app;
+    
     cout << "\n¡Bienvenido a Radionauta v3!" << endl;
     cout << "Solicita aquí tu canción preferida. \n" << endl;
-    while (opcion != 5) {
+    while (opcion != 6) {
         
         cout << "Opciones:" << endl;
         cout << "1. Añadir petición." << endl;
         cout << "2. Reproducir canciones." << endl;
-        cout << "3. Mostrar canciones disponibles." << endl;
-        cout << "4. Mostrar lista de peticiones." << endl;
-        cout << "5. Exit" << endl;
+        cout << "3. Mostrar canciones reproducidas." << endl;
+        cout << "4. Mostrar canciones disponibles." << endl;
+        cout << "5. Mostrar lista de peticiones." << endl;
+        cout << "6. Exit" << endl;
         cout << "Por favor, introduce el número deseado y pulsa 'Enter': ";
         
         // Evitar malas entradas de teclado
         cin >> opcion;
-        while (opcion < 1 || opcion > 5) {
+        while (opcion < 1 || opcion > 6) {
             cin.clear();
             cin.ignore(100, '\n');
-            cout << "Por favor, introduce un número entre 1 y 5: ";
+            cout << "Por favor, introduce un número entre 1 y 6: ";
             cin >> opcion;
         }
         
@@ -329,21 +358,27 @@ int main(int argc, char** argv) {
             }
             case 2: {
                 //Reproducir canción
-                RadioApp app;
                 cout << "\n\nIntroduce el código de la canción a reproducir." << endl;
                 cout << "Introduce '0' en cualquier momento para interrumpir la "
                         "reproducción" << endl;
                 app.solicitarCanciones();
                 break;
             }
-            case 3: 
+            case 3:
+                cout << "Canciones reproducidas:" << endl;
+                //Mostrar lista de canciones reproducidas  
+                for (int i = 0; i < app.vRequest.size(); ++i) {
+                    cout << app.vRequest[i].getCod() << endl;
+                }
+                break;
+            case 4: 
                 cout << "Canciones disponibles:" << endl;
                 //Mostrar lista de canciones
                 for (std::list<Song>::iterator it=lSongs.begin(); it!=lSongs.end(); ++it) {
                     cout << it->GetCode() << " - " << it->GetTitle() << endl;        
                 }
                 break;
-            case 4: 
+            case 5: 
                 cout << "Lista de peticiones:" << endl;
                 //Mostrar lista peticiones
                 list< list<Request> >::iterator i;
