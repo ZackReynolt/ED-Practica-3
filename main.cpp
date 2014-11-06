@@ -167,15 +167,14 @@ void AnadePeticion(std::list< list<Request> > &lRequest, int peticion) {
         Request r = *data;
         r.setNRequest(1);
         
+        
         list< list<Request> >::iterator it = lRequest.begin();
-        while (it != lRequest.end() && !insertado) {
+        while (it != lRequest.end()) {
             it->remove(*data);
             if (it->empty())
                 it = lRequest.erase(it);
-            else if (it->begin()->getNRequest() == r.getNRequest()) {
+            else if (it->begin()->getNRequest() == r.getNRequest())
                 it->push_back(r);
-                insertado = true;
-            }                
             ++it;
         }
         if (insertado == false) {
