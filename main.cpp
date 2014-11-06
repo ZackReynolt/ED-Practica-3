@@ -69,6 +69,8 @@ public:
                 //Coge la que tenga más prioridad
                 cancion = lRequest.back().back().getCod();
                 lRequest.back().pop_back();
+                if (lRequest.back().empty())
+                    lRequest.pop_back();                
             } else {
                 cancion = 0;
             }
