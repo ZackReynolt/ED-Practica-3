@@ -126,37 +126,22 @@ public:
                     cin >> letra;
                 }
                 
-                if (letra == "C") {
-                    cout << "Introduzca el código de su petición:" << endl; 
-                    cin >> peticion;
-                    int j = 0;
-                    bool reproducida = false;
-
-                    while (j < vReproducidas.size() && j < 100 && !reproducida) {
-                        if (vReproducidas[j] == peticion) {
-                            cout << "La canción " << peticion 
-                                    <<  " fue de las últimas 100 reproducidas" << endl;
-                            reproducida=true;
-                        } else
-                            AnadePeticion(lRequest,peticion);
-                        j++;
-                    }
-                } else {
+                if (letra != "C") {
                     BuscaCodigo(lSongs, letra);
-                    cout << "\nIntroduce el código de su petición: " << endl;
-                    cin >> peticion;
-                    int j = 0;
-                    bool reproducida = false;
+                }  
+                cout << "\nIntroduce el código de su petición: " << endl;
+                cin >> peticion;
+                int j = 0;
+                bool reproducida = false;
 
-                    while (j < vReproducidas.size() && j < 100 && !reproducida) {
-                        if (vReproducidas[j] == peticion) {
-                            cout << "La canción " << peticion 
-                                    <<  " fue de las últimas 100 reproducidas" << endl;
-                            reproducida=true;
-                        } else
-                            AnadePeticion(lRequest,peticion);
-                        j++;
-                    }
+                while (j < vReproducidas.size() && j < 100 && !reproducida) {
+                    if (vReproducidas[j] == peticion) {
+                        cout << "La canción " << peticion 
+                                <<  " fue de las últimas 100 reproducidas" << endl;
+                        reproducida=true;
+                    } else
+                        AnadePeticion(lRequest,peticion);
+                    j++;
                 }
                 break;
             }
