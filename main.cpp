@@ -74,17 +74,17 @@ public:
         //   PRUEBAS   //
         /////////////////
 
-        AnadePeticion(lRequest, 4);
-        AnadePeticion(lRequest, 4);
-        AnadePeticion(lRequest, 4);
-        AnadePeticion(lRequest, 4);
-        AnadePeticion(lRequest, 2);
-        AnadePeticion(lRequest, 2);
-        AnadePeticion(lRequest, 2);
-        AnadePeticion(lRequest, 1);
-        AnadePeticion(lRequest, 5);
-        AnadePeticion(lRequest, 5);
-        AnadePeticion(lRequest, 3);
+//        AnadePeticion(lRequest, 4);
+//        AnadePeticion(lRequest, 4);
+//        AnadePeticion(lRequest, 4);
+//        AnadePeticion(lRequest, 4);
+//        AnadePeticion(lRequest, 2);
+//        AnadePeticion(lRequest, 2);
+//        AnadePeticion(lRequest, 2);
+//        AnadePeticion(lRequest, 1);
+//        AnadePeticion(lRequest, 5);
+//        AnadePeticion(lRequest, 5);
+//        AnadePeticion(lRequest, 3);
         
         cout << "\n¡Bienvenido a Radionauta v3!" << endl;
         cout << "Solicita aquí tu canción preferida. \n" << endl;
@@ -183,21 +183,16 @@ public:
                 if (lRequest.back().empty())
                     lRequest.pop_back();                
             } else {
-                cancion = 0;
+                //Si no hay canción, reproduce de forma aleatoria
+                int aleatorio = rand()%lSongs.size()+1;
+                cancion = aleatorio;
             }
                 
             semaforo.lock();
             canciones.push_back(cancion);
             semaforo.unlock();
                 
-        } while (cancion != 0 && opcion!= 5);
-        
-        //Mostrar lista de canciones reproducidas
-//        cout << "Canciones reproducidas:" << endl;
-//        for (int i = 0; i < vReproducidas.size(); ++i) {
-//            cout << vReproducidas[i] << endl;
-//        }
-//        cout << "\n";
+        } while (opcion!= 5);
 
         pinchar = false;
         threadReproducirCanciones.join();
